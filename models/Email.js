@@ -25,7 +25,7 @@ const emailSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['safe', 'scam', 'phishing', 'suspicious', 'pending'],
+        enum: ['safe', 'scam', 'phishing', 'suspicious', 'pending','low_risk', 'medium_risk', 'high_risk'],
         default: 'pending',
         required: true,
     },
