@@ -23,7 +23,7 @@ function VerifyContent() {
     try {
       setStatus('checking');
       const response = await fetch(`/api/auth/verify?token=${verificationToken}`);
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Verification failed');
@@ -31,14 +31,14 @@ function VerifyContent() {
 
       const data = await response.json();
       console.log(data)
-      
+
       if (data.success) {
         setStatus('success');
         setMessage('Email verified successfully! Redirecting to Login...');
-        
+
         // Redirect after successful verification
         setTimeout(() => {
-          router.push('/auth/login');
+          router.push('/login');
         }, 3000);
       } else {
         throw new Error(data.error || 'Verification failed');

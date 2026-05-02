@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import User from '@/models/User';
+import { logActivity } from '@/lib/auth';
 
 export async function GET(request) {
     try {
@@ -8,7 +9,6 @@ export async function GET(request) {
 
         const { searchParams } = new URL(request.url);
         const token = searchParams.get('token');
-
         if (!token) {
             return NextResponse.json(
                 { error: 'Invalid verification token' },
@@ -17,10 +17,8 @@ export async function GET(request) {
         }
 
         const user = await User.findOne({
-            verificationToken: token,
-            verificationExpires: { $gt: new Date() }
+            verificationToken: token
         });
-
         if (!user) {
             return NextResponse.json(
                 { error: 'Invalid or expired verification token' },
@@ -31,7 +29,7 @@ export async function GET(request) {
         // Verify user
         user.isVerified = true;
         user.verificationToken = undefined;
-        user.verificationExpires = undefined;
+        user.lastActivity = undefined;
         await user.save();
 
         // Log activity
